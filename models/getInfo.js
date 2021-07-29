@@ -7,6 +7,7 @@ const masterChefAbi = require('../abi/farm/masterFatAnimal/abi.json');
 const bandOracleAbi = require('../abi/aggregator/bandOracle/abi.json');
 const contracts = require('../config/constants/contracts');
 const tokens = require('../config/constants/tokens');
+const farms = require('../config/constants/farms');
 const formatBalance = require('../utils/formatBalance');
 const BigNumber = require('bignumber.js');
 
@@ -120,11 +121,13 @@ getInfo.fetchFarms = async function (allFarms, targetAddress) {
 };
 
 getInfo.fetchPrice = async function () {
+  const FAT_BUSD_FARM_ID = 2;
+  
   const tokenFatContract = new Contract(tokens.fat.address, erc20Abi);
   const tokenBusdContract = new Contract(tokens.busd.address, erc20Abi);
   const bandOracleContract = new Contract(contracts.bandProtocol, bandOracleAbi);
-  const balanceOfFatCall = tokenFatContract.balanceOf('0xA3dDd8109BC01CC5431B205a39edeBcaFf361A3D');
-  const balanceOfBusdCall = tokenBusdContract.balanceOf('0xA3dDd8109BC01CC5431B205a39edeBcaFf361A3D');
+  const balanceOfFatCall = tokenFatContract.balanceOf(farms[FAT_BUSD_FARM_ID].lpAddresses);
+  const balanceOfBusdCall = tokenBusdContract.balanceOf(farms[FAT_BUSD_FARM_ID].lpAddresses);
   const oracleBNBCall = bandOracleContract.getReferenceData('BNB', 'BUSD');
   const [balanceOfFat, balanceOfBusd, bnb] = await multiCall([balanceOfFatCall, balanceOfBusdCall, oracleBNBCall], getNodeUrl());
 
