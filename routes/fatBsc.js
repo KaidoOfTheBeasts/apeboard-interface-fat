@@ -14,7 +14,7 @@ router.get('/:address', async function(req, res, next) {
     }
 
     res.status(200).send({
-      "farms": await getInfo.fetchFarms(farms, address),
+      "farms": await getInfo.fetchFarms(farms, address.toLowerCase()),
       "boardroom": [],
       "vault": []
     });
